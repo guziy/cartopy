@@ -636,7 +636,7 @@ class Projection(six.with_metaclass(ABCMeta, CRS)):
         """
         return_value = None
 
-        if self == src_crs:
+        if self == src_crs and len(vertices) > 0:
             x = vertices[:, 0]
             y = vertices[:, 1]
             # Extend the limits a tiny amount to allow for precision mistakes
@@ -762,6 +762,10 @@ class PlateCarree(_CylindricalProjection):
     def quick_vertices_transform(self, vertices, src_crs):
         return_value = super(PlateCarree,
                              self).quick_vertices_transform(vertices, src_crs)
+
+        # if there is no vertices
+        if len(vertices) == 0:
+            return return_value
 
         # Optimise the PlateCarree -> PlateCarree case where no
         # wrapping or interpolation needs to take place.
